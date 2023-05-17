@@ -40,7 +40,7 @@
             <br>
             <div class="row">
                 <div class="col-md-12 pb-3">
-                    <a class="btn btn-success" href=""><i class='bx bx-plus-circle'></i>{{ __(' Add To-Do List') }}</a>
+                    <a class="btn btn-success" href="{{ route('todo_lists.create')}}"><i class='bx bx-plus-circle'></i>{{ __(' Add To-Do List') }}</a>
                 </div>
                 <div class="col-md-12">
                     <div class="card p-4">
