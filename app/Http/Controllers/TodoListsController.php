@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TodoList;
+use App\Models\TodoTasks;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTodoListRequest;
 
 class TodoListsController extends Controller
 {
@@ -25,9 +28,28 @@ class TodoListsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    // 
+    public function store(StoreTodoListRequest $request)
     {
-        //
+        $newToDoList = TodoList::create([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        if (count($request->tasks)) {
+            foreach ($request->tasks as $task) {
+
+                TodoTasks::create([
+                    'td_list_id' => $newToDoList->id,
+                    'title' => $task['title'],
+                    'due_date' => $task['due_date'],
+                    'due_time' => $task['due_time'],
+                    'status' => $task['status'] ?? 'pending',
+                ]);                
+            }
+        }
+
+        return redirect('/home')->with('success', 'Todo list and tasks saved successfully!');
     }
 
     /**

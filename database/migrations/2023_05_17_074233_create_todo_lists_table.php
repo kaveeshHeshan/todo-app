@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('todo_lists', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->mediumText('description');
             $table->timestamps();
         });
     }

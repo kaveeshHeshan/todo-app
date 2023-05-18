@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('todo_tasks', function (Blueprint $table) {
             $table->id();
+            $table->integer('td_list_id');
+            $table->string('title');
+            $table->date('due_date');
+            $table->time('due_time');
+            $table->string('status');
             $table->timestamps();
         });
     }
