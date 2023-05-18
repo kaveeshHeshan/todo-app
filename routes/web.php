@@ -23,3 +23,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Todo Lists related
 Route::resource('todo_lists', 'TodoListsController');
+Route::delete('/task/remove/{id}', 'TodoListsController@deleteTask');

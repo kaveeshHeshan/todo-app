@@ -6,6 +6,7 @@ use App\Models\TodoList;
 use App\Models\TodoTasks;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTodoListRequest;
+use App\Http\Requests\UpdateTodoListRequest;
 
 class TodoListsController extends Controller
 {
@@ -57,7 +58,9 @@ class TodoListsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $todoList = TodoList::findOrFail($id);
+        return view('pages.todo_lists.show', compact('todoList'));
+
     }
 
     /**
@@ -65,15 +68,53 @@ class TodoListsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $todoList = TodoList::findOrFail($id);
+        return view('pages.todo_lists.edit', compact('todoList'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTodoListRequest $request, string $id)
     {
-        //
+
+        $updateToDoList = TodoList::findOrFail($id);
+        $updateToDoList->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        if (count($request->tasks)) {
+            foreach ($request->tasks as $task) {
+
+                if (!is_null($task['r_id'])) {
+
+                    $existingTask = TodoTasks::findOrFail($task['r_id']);
+                    
+                    if (!is_null($existingTask)) {
+                        $existingTask->update([
+                            'td_list_id' => $updateToDoList->id,
+                            'title' => $task['title'],
+                            'due_date' => $task['due_date'],
+                            'due_time' => $task['due_time'],
+                            'status' => $task['status'] ?? 'pending',
+                        ]);
+                    }
+
+                } else {
+                    TodoTasks::create([
+                        'td_list_id' => $updateToDoList->id,
+                        'title' => $task['title'],
+                        'due_date' => $task['due_date'],
+                        'due_time' => $task['due_time'],
+                        'status' => $task['status'] ?? 'pending',
+                    ]);
+                }
+                      
+            }
+        }
+
+        return redirect('/home')->with('success', 'Todo list and tasks updated successfully!');
     }
 
     /**
@@ -82,5 +123,19 @@ class TodoListsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Remove the specified task from list.
+     */
+    public function deleteTask(string $id)
+    {
+        $task = TodoTasks::findOrFail($id);
+        $task->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task removed successfully!'
+        ])->setStatusCode(200);
     }
 }

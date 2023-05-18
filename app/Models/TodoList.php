@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TodoTasks;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TodoList extends Model
 {
@@ -13,4 +14,10 @@ class TodoList extends Model
         'title',
         'description',
     ];
+
+    // Get related tasks data
+    public function tasksData()
+    {
+        return $this->hasMany(TodoTasks::class, 'td_list_id', 'id');
+    }
 }
