@@ -122,7 +122,14 @@ class TodoListsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $list = TodoList::findOrFail($id);
+        TodoTasks::where('td_list_id', $id)->delete();
+        $list->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'List and related tasks removed successfully!'
+        ])->setStatusCode(200);
     }
 
     /**

@@ -62,9 +62,14 @@
                             <tbody>
                                 @foreach ($todoList->tasksData as $task)
                                     <tr>
+                                        @php
+                                            $formattedDate = \Carbon\Carbon::parse($task->due_date)->format('m-d-Y');
+                                            $formattedTime = \Carbon\Carbon::parse($task->due_time)->format('h:i A');
+                                        @endphp
                                         <td>{{$task->title ?? '--'}}</td>
-                                        <td>{{$task->due_date ?? '--'}}</td>
-                                        <td>{{$task->due_time ?? '--'}}</td>
+                                        <td>{{$formattedDate ?? '--'}}</td>
+                                        
+                                        <td>{{ $formattedTime ?? '--'}}</td>
                                         <td style="text-transform: capitalize;">{{$task->status ?? '--'}}</td>
                                     </tr>
                                 @endforeach

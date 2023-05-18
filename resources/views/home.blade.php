@@ -4,7 +4,8 @@
 
     <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/r-2.4.1/datatables.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet">
 
     <style>
         .dataTables_length,
@@ -66,7 +67,7 @@
                 <div class="col-md-12">
                     <div class="card p-4">
                         @if (count($todoLists) > 0)
-                            <table id="todo-table" class="table table-hover">
+                            <table id="todo-table" class="table table-hover" width="100%";>
                                 <thead>
                                     <tr>
                                         <th scope="col">{{ __('Title') }}</th>
@@ -99,7 +100,7 @@
                                                     <ul class="dropdown-menu float-left" aria-labelledby="dropdownMenuButton1">
                                                       <li><a class="dropdown-item" href="{{route('todo_lists.show', $todoList->id)}}"><ion-icon name="eye-outline"></ion-icon> {{__('View')}}</a></li>
                                                       <li><a class="dropdown-item" href="{{route('todo_lists.edit', $todoList->id)}}"><i class='bx bx-edit-alt' ></i> {{__('Edit')}}</a></li>
-                                                      <li><a class="dropdown-item text-danger" href="#"><i class='bx bx-trash' ></i> {{__('Remove')}}</a></li>
+                                                      <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="removeList({{$todoList->id}})"><i class='bx bx-trash' ></i> {{__('Remove')}}</a></li>
                                                     </ul>
                                                   </div>
                                             </td>
@@ -108,7 +109,9 @@
                                 </tbody>
                             </table>
                         @else
-                            <p>{{ __('No To-Do List found') }}</p>
+                            <div class="text-center py-3" style="border: dashed 2px gray; border-radius: 10px;">
+                                <p>{{ __('No Todo List found') }}</p>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -120,10 +123,11 @@
 @push('custom-scripts')
     <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/r-2.4.1/datatables.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -139,6 +143,63 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        let app_url = {!! json_encode(url('/')) !!};
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function removeList(listId) {
+            Swal.fire({
+                        title: 'Are you sure?',
+                        text: "This will lead to permanant list delete!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            
+                            $.ajax({
+                                type: 'delete',
+                                url: `${app_url}/list/remove/${listId}`,
+                                success: function(data) {
+                                    console.log();
+                                    Swal.fire({
+                                        toast: true,
+                                        position: 'bottom-end',
+                                        icon: 'success',
+                                        title: 'Todo - List and related tasks removed successfully!',
+                                        showConfirmButton: false,
+                                        timerProgressBar: true,
+                                        timer: 3500
+                                    });
+
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 4000);
+
+                                },
+                                error: function(xhr, status, error) {
+                                    Swal.fire({
+                                        toast: true,
+                                        position: 'bottom-end',
+                                        icon: 'error',
+                                        title: 'Something went wrong!',
+                                        showConfirmButton: false,
+                                        timerProgressBar: true,
+                                        timer: 3500
+                                    });
+                                }
+                            });
+                        }
+                    })
+        }
     </script>
 @endpush
 
