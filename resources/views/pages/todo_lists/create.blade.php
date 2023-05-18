@@ -3,7 +3,8 @@
 @push('custom-styles')
 
     <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/r-2.4.1/datatables.min.css" rel="stylesheet"/>
-    
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet">
+
     <style>
         .custom-toggle {
             position: relative;
@@ -128,7 +129,7 @@
                             <label for="todo-list-desc">{{ __('Description') }}</label>
                             <textarea class="form-control" name="description" id="todo-list-desc" cols="10" rows="5" placeholder={{ __('Description') }}></textarea>
                         </div>
-                        <div class="form-group row py-2">
+                        {{-- <div class="form-group row py-2">
                             <div class="col row justify-content-center">
                                 <label class="form-control-label col-md-4 pt-2" for="input-is_active">
                                     {{ __('Would you like to add tasks as well ?')}}
@@ -140,7 +141,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div id="todo-tasks-section" class="">
                             <h5>{{ __('Todo Tasks - Information') }}</h5>
                             <hr>
@@ -189,12 +190,12 @@
                                 <div id="main-container">
 
                                     {{-- Section --}}
-                                    <div class="container-item task row">
+                                    <div class="container-item task row" id="1">
 
                                             <div class="form-row row">
                                                 <div class="col">
-                                                    <label for="task-title">{{ __('Task Title') }}</label>
-                                                    <input type="text" class="form-control" placeholder={{ __('Task Title') }}>
+                                                    <label for="task-title">{{ __('Title') }}</label>
+                                                    <input type="text" class="form-control" placeholder={{ __('Title') }}>
                                                 </div>
                                                 <div class="col">
                                                     <label for="task-date">{{ __('Due Date') }}</label>
@@ -210,13 +211,14 @@
                                                 </div>
                                                 <div class="col-1">
                                                     <div class="form-group" style="margin: 10px 10px 10px 10px;">
-                                                        <a href="javascript:void(0)"
+                                                        <a href="javascript:void(0)" onclick="removeTask(1)"
                                                             class="remove-item btn btn-sm btn-danger remove-social-media">X</a>
                                                     </div>
                                                 </div>
                                             </div>
 
                                     </div>
+                                    <div id="clone-section" class=""></div>
                                     {{--  --}}
 
                                 </div>
@@ -245,17 +247,16 @@
 </div>
 
 @push('custom-scripts')
-<script
-src="https://code.jquery.com/jquery-3.7.0.min.js"
-integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
+
     <script type="text/javascript" src="{{ url('/js/cloneData.js') }}"></script>
     <script>
 
         // Onload
         $(document).ready(function() {
             
-            $('#todo-tasks-section').hide();
+            // $('#todo-tasks-section').hide();
 
         });
 
@@ -275,36 +276,111 @@ crossorigin="anonymous"></script>
     </script>
 
 <script>
-    $('a#add-more').cloneData({
-        mainContainerId: 'main-container', // Main container Should be ID
-        cloneContainer: 'container-item', // Which you want to clone
-        removeButtonClass: 'remove-item', // Remove button for remove cloned HTML
-        removeConfirm: true, // default true confirm before delete clone item
-        removeConfirmMessage: 'Are you sure want to delete?', // confirm delete message
-        //append: '<a href="javascript:void(0)" class="remove-item btn btn-sm btn-danger remove-social-media">Remove</a>', // Set extra HTML append to clone HTML
-        minLimit: 1, // Default 1 set minimum clone HTML required
-        maxLimit: 10, // Default unlimited or set maximum limit of clone HTML
-        defaultRender: 1,
-        excludeHTML: ".exclude",
-        init: function() {
-            console.info(':: Initialize Plugin ::');
-        },
-        beforeRender: function() {
-            console.info(':: Before rendered callback called');
+    // $('a#add-more').cloneData({
+    //     mainContainerId: 'main-container',
+    //     cloneContainer: 'container-item',
+    //     removeButtonClass: 'remove-item',
+    //     removeConfirm: true,
+    //     removeConfirmMessage: 'Are you sure want to delete?',
+    //     minLimit: 1,
+    //     maxLimit: 10,
+    //     defaultRender: 1,
+    //     excludeHTML: ".exclude",
+    //     init: function() {
+    //         console.info(':: Initialize Plugin ::');
+    //     },
+    //     beforeRender: function() {
+    //         console.info(':: Before rendered callback called');
             
-        },
-        afterRender: function() {
-            console.info(':: After rendered callback called');
+    //     },
+    //     afterRender: function() {
+    //         console.info(':: After rendered callback called');
             
-        },
-        afterRemove: function() {
-            console.warn(':: After remove callback called');
-        },
-        beforeRemove: function() {
-            console.warn(':: Before remove callback called');
-        }
+    //     },
+    //     afterRemove: function() {
+    //         console.warn(':: After remove callback called');
+    //     },
+    //     beforeRemove: function() {
+    //         console.warn(':: Before remove callback called');
+    //     }
 
+    // });
+    var minColnes = 1;
+    var maxClones = 5;
+
+    $( "a#add-more" ).on( "click", function() {
+        var initialId = $('.container-item:last').attr('id');
+        console.log(initialId);
+        var elCount = $('.container-item').length + 1;
+        if (elCount <= maxClones) {
+            // var section = $('#1').clone(true);
+
+            var section = `<div class="container-item task row" id=${parseInt(initialId) + 1}>
+                                <div class="form-row row">
+                                    <div class="col">
+                                        <label for="task-title">{{ __('Title') }}</label>
+                                        <input type="text" class="form-control" placeholder={{ __('Title') }}>
+                                    </div>
+                                    <div class="col">
+                                        <label for="task-date">{{ __('Due Date') }}</label>
+                                        <input type="date" class="form-control" placeholder={{ __('Due Date') }}>
+                                    </div>
+                                    <div class="col">
+                                        <label for="task-time">{{ __('Due Time') }}</label>
+                                        <input type="time" class="form-control" placeholder={{ __('Due Time') }}>
+                                    </div>
+                                    <div class="col">
+                                        <label for="task-status">{{ __('Status') }}</label>
+                                        <input type="text" class="form-control" placeholder={{ __('Status') }}>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="form-group" style="margin: 10px 10px 10px 10px;">
+                                            <a href="javascript:void(0)" onclick="removeTask(${parseInt(initialId) + 1})"
+                                                class="remove-item btn btn-sm btn-danger remove-social-media">X</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                            var prevElement = $('.container-item:last')[0];
+                            console.log("Selector");
+                            console.log(prevElement);
+                            prevElement.insertAdjacentHTML('afterend', section)
+        } else {
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'warning',
+                title: 'The Maximum amount of tasks you can add are '+maxClones+'!',
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 3500
+            })
+        }
     });
+
+    // $( ".remove-item" ).on( "click", function() {
+    //     console.log($('.remove-item'));
+    // });
+    function removeTask(elId) {
+        var elmntCount = $('.container-item').length;
+        if (elmntCount > minColnes) {
+            $('#'+elId).remove()
+        } else {
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'warning',
+                title: 'Todo list should have atleast '+minColnes+' task!',
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 3500
+            })
+        }
+        // var parentEl = $(this).parent('.container-item');
+        // console.log($('#'+elId).attr('id'));
+    }
+
 </script>
 
 @endpush
