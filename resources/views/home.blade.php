@@ -39,6 +39,19 @@
         .btn-icon-only::after{
             content: '' !important;
         }
+        .task-planner-item {
+            border-radius: 10px;
+            padding: 10px 0px 0px 10px;
+        }
+        .task-planner-item:nth-child(n){
+            margin-bottom: 10px;
+        }
+        .color-indicator{
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
     </style>
 @endpush
 
@@ -46,26 +59,91 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="card p-3">
-                <div class="card-header bg-dark text-white">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+            <div class="card p-3 shadow">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card-header bg-dark text-white">{{ __('Dashboard') }}</div>
+    
+                        <div class="card-body">
+                            @if (session('status'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
+                            <h3>{{\Auth::user()->name ?? 'User'}},</h3>
+                            {{ __('Welcome to the TODO Dashboard ') }}{{__('!')}}
+                            <hr>
+                            <div class="row">
+                                <div class=" py-3">
+                                    <h4>{{__('Task color indicators')}}</h4>
+                                </div>
+                                <div class="col">
+                                    <div class="color-indicator" style="background: #e11d48;"></div> Indicates the tasks which has due time/date today.
+                                </div>
+                                <div class="col">
+                                    <div class="color-indicator" style="background: #fbbf24;"></div> Indicates the tasks which has due time/date Tomorrow.
+                                </div>
+                                <div class="col">
+                                    <div class="color-indicator" style="background: #cbd5e1;"></div> Indicates the tasks that you have time to complete.
+                                </div>
+                            </div>
                         </div>
-                    @endif
-                    <h3>{{\Auth::user()->name ?? 'User'}},</h3>
-                    {{ __('Welcome to the TODO Dashboard ') }}{{__('!')}}
+                        
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-header bg-dark text-white">{{ __('Tasks Panel (Tasks within next three days.)') }}</div>
+    
+                        <div class="card-body">
+                            @if (count($onComingTasks) > 0)
+                                @foreach ($onComingTasks as $key => $tasks)
+                                    <div class="">
+                                        <b><p>{{$key}}</p></b>
+                                        <hr>
+                                        <div class="row container">
+                                            @foreach ($tasks as $task)
+                                                @php
+                                                    $today = \Carbon\Carbon::today()->toDateString();
+                                                    $tomorrow = \Carbon\Carbon::tomorrow()->toDateString();
+                                                    $txtColor = '#fff';
+
+                                                    if ($task->due_date == $today) {
+                                                        $bgColor = '#e11d48';
+                                                    } else if($task->due_date == $tomorrow) {
+                                                        $bgColor = '#fbbf24';
+                                                    } else {
+                                                        $bgColor = '#cbd5e1';
+                                                        $txtColor = '#000';
+                                                    }
+
+                                                    $formattedDueTime = \Carbon\Carbon::parse($task->due_time)->format('h:i A');
+                                                    
+                                                @endphp
+                                                <div class="row task-planner-item" style="background: {{$bgColor}}; color: {{$txtColor}};" role="">
+                                                    <div class="col-md-6">
+                                                        <p>{{__('Name : ')}}{{$task->title}}</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p>{{__('Due Time : ')}}<span style="text-transform: capitalize;">{{$formattedDueTime}}</span></p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                {{ __('There are no tasks for you today') }}{{__('!')}}
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-12 pb-3">
-                    <a class="btn btn-success" href="{{ route('todo_lists.create')}}"><i class='bx bx-plus-circle'></i>{{ __(' Add To-Do List') }}</a>
+                    <a class="btn btn-success shadow" href="{{ route('todo_lists.create')}}"><i class='bx bx-plus-circle'></i>{{ __(' Add To-Do List') }}</a>
                 </div>
                 <div class="col-md-12">
-                    <div class="card p-4">
+                    <div class="card p-4 shadow">
                         @if (count($todoLists) > 0)
                             <table id="todo-table" class="table table-hover" width="100%";>
                                 <thead>

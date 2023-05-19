@@ -24,6 +24,11 @@
             color: red !important;
             padding: 10px 10px 10px 10px !important;
         }
+        .color-indicator{
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+        }
     </style>
 @endpush
 
@@ -61,11 +66,24 @@
                             </thead>
                             <tbody>
                                 @foreach ($todoList->tasksData as $task)
-                                    <tr>
-                                        @php
-                                            $formattedDate = \Carbon\Carbon::parse($task->due_date)->format('m-d-Y');
-                                            $formattedTime = \Carbon\Carbon::parse($task->due_time)->format('h:i A');
-                                        @endphp
+                                    @php
+                                        $formattedDate = \Carbon\Carbon::parse($task->due_date)->format('m-d-Y');
+                                        $formattedTime = \Carbon\Carbon::parse($task->due_time)->format('h:i A');
+                                        $today = \Carbon\Carbon::today()->toDateString();
+                                        $tomorrow = \Carbon\Carbon::tomorrow()->toDateString();
+                                        $txtColor = '#fff';
+
+                                        if ($task->due_date == $today) {
+                                            $bgColor = '#e11d48';
+                                        } else if($task->due_date == $tomorrow) {
+                                            $bgColor = '#fbbf24';
+                                        } else {
+                                            $bgColor = '#cbd5e1';
+                                            $txtColor = '#000';
+                                        }
+                                    @endphp
+                                    <tr style="background: {{$bgColor}}; color: {{$txtColor}};">
+                                        
                                         <td>{{$task->title ?? '--'}}</td>
                                         <td>{{$formattedDate ?? '--'}}</td>
                                         
@@ -75,6 +93,18 @@
                                 @endforeach
                             </tbody>
                           </table>
+                          <hr>
+                          <div class="row">
+                            <div class="col">
+                                <div class="color-indicator" style="background: #e11d48;"></div> Indicates the tasks which has due time/date today.
+                            </div>
+                            <div class="col">
+                                <div class="color-indicator" style="background: #fbbf24;"></div> Indicates the tasks which has due time/date Tomorrow.
+                            </div>
+                            <div class="col">
+                                <div class="color-indicator" style="background: #cbd5e1;"></div> Indicates the tasks that you have time to complete.
+                            </div>
+                          </div>
                         @else
                             <h5>{{ __('No Tasks assigned to this Todo list') }}</h5>
                         @endif

@@ -16,4 +16,22 @@ class TodoTasks extends Model
         'due_time',
         'status',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['due_date_time'];
+
+    public function listData()
+    {
+        return $this->belongsTo('App\Models\TodoList', 'td_list_id', 'id');
+    }
+
+    
+    public function getDueDateTimeAttribute()
+    {
+        return $this->due_date." ".$this->due_time;
+    }
 }

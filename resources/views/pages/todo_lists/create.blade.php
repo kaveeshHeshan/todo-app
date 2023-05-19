@@ -29,6 +29,9 @@
 
 @section('content')
 <div class="container">
+    <div class="py-4">
+        <a class="btn btn-success" href="{{url('/home')}}"><i class='bx bx-chevron-left'></i> {{ __('Back') }}</a>
+    </div>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-lg">
