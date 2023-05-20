@@ -9,14 +9,15 @@
 
 ## Guidence - Step By Step
 
-1. Clone the project from github.
+1. **Clone** the project from github.
 2. Copy and paste the **.env.example** file and rename it to the **.env**.
 3. Then add **Database configurations** to the **.env** file (what you created in second step).
 4. Then run **composer update**.
 5. Run **npm install**.
 6. Then again run **php artisan serve** in a terminal.
 7. After that run **npm run dev** in another terminal.
-8. Then click the URL generated in sixth (6) step and you are good to go.
+8. I have added an **Backup SQL file** in **backup** folder, If you want you add it to the DB creaed by you..
+9. Then click the URL generated in **sixth (6)** step and you are good to go.
 
 ## NOTE
 
