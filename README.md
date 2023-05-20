@@ -16,7 +16,7 @@
 5. Run **npm install**.
 6. Then again run **php artisan serve** in a terminal.
 7. After that run **npm run dev** in another terminal.
-8. I have added an **Backup SQL file** in **backup** folder, If you want you add it to the DB creaed by you..
+8. I have added an **Backup SQL file** in **backup** folder. If you want, you can import it to the DB created by you..
 9. Then click the URL generated in **sixth (6)** step and you are good to go.
 
 ## NOTE
