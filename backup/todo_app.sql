@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2023 at 09:50 AM
+-- Generation Time: May 20, 2023 at 11:14 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -56,11 +56,11 @@ CREATE TABLE `migrations` (
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2014_10_12_000000_create_users_table', 1),
 (2, '2014_10_12_100000_create_password_reset_tokens_table', 1),
-(3, '2019_08_19_000000_create_failed_jobs_table', 1),
-(4, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(5, '2014_10_12_100000_create_password_resets_table', 2),
-(6, '2023_05_17_074233_create_todo_lists_table', 2),
-(8, '2023_05_17_074251_create_todo_tasks_table', 3);
+(3, '2014_10_12_100000_create_password_resets_table', 1),
+(4, '2019_08_19_000000_create_failed_jobs_table', 1),
+(5, '2019_12_14_000001_create_personal_access_tokens_table', 1),
+(6, '2023_05_17_074233_create_todo_lists_table', 1),
+(7, '2023_05_17_074251_create_todo_tasks_table', 1);
 
 -- --------------------------------------------------------
 
@@ -113,6 +113,7 @@ CREATE TABLE `personal_access_tokens` (
 
 CREATE TABLE `todo_lists` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` mediumtext NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -123,9 +124,8 @@ CREATE TABLE `todo_lists` (
 -- Dumping data for table `todo_lists`
 --
 
-INSERT INTO `todo_lists` (`id`, `title`, `description`, `created_at`, `updated_at`) VALUES
-(2, 'My First Todo List', 'This is my first Todo List.', '2023-05-18 10:15:26', '2023-05-19 02:19:03'),
-(3, 'Second Todo List', 'This is my second Todo List.', '2023-05-19 02:17:33', '2023-05-19 02:17:33');
+INSERT INTO `todo_lists` (`id`, `user_id`, `title`, `description`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Project Setup', 'This is regarding project setup and tasks are as follows.', '2023-05-20 03:22:04', '2023-05-20 03:22:04');
 
 -- --------------------------------------------------------
 
@@ -149,11 +149,10 @@ CREATE TABLE `todo_tasks` (
 --
 
 INSERT INTO `todo_tasks` (`id`, `td_list_id`, `title`, `due_date`, `due_time`, `status`, `created_at`, `updated_at`) VALUES
-(4, 2, 'Clone Project', '2023-05-20', '21:17:00', 'pending', '2023-05-18 10:15:26', '2023-05-20 02:19:22'),
-(5, 2, 'Configuration', '2023-05-21', '00:13:00', 'pending', '2023-05-18 23:13:26', '2023-05-20 02:19:22'),
-(6, 2, 'Test', '2023-05-21', '06:35:00', 'pending', '2023-05-18 23:35:34', '2023-05-20 02:19:22'),
-(7, 2, 'Run the Project', '2023-05-22', '14:15:00', 'incomplete', '2023-05-19 01:15:46', '2023-05-20 02:19:22'),
-(8, 3, 'What do you think ?', '2023-05-23', '14:20:00', 'pending', '2023-05-19 02:17:33', '2023-05-20 02:19:45');
+(1, 1, 'Clone Project', '2023-05-20', '11:40:00', 'pending', '2023-05-20 03:22:04', '2023-05-20 03:22:04'),
+(2, 1, 'Configuration', '2023-05-21', '08:00:00', 'pending', '2023-05-20 03:22:04', '2023-05-20 03:22:04'),
+(3, 1, 'Testing', '2023-05-21', '13:00:00', 'pending', '2023-05-20 03:22:04', '2023-05-20 03:22:04'),
+(4, 1, 'Run the Project', '2023-05-22', '09:00:00', 'pending', '2023-05-20 03:22:04', '2023-05-20 03:22:04');
 
 -- --------------------------------------------------------
 
@@ -177,7 +176,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Tester Miu', 'miutest@tester.com', NULL, '$2y$10$obmV3g4ozMi/a6JAmQrr9.FosvsOBCvDYAlDrUnkSMclcpUJrEFZS', NULL, '2023-05-17 01:16:49', '2023-05-17 01:16:49');
+(1, 'Miu San', 'miusan@todo.com', NULL, '$2y$10$PRiSzgsa93d7RjiVuW6lKul024I8Vi3b6wK4iQwhzI8EypgdwuYBW', NULL, '2023-05-20 03:16:39', '2023-05-20 03:16:39'),
+(2, 'Saiyan Fire', 'seyya@gmail.com', NULL, '$2y$10$nBAFaFD1hc.IYjSXcYwt0eIbmMZx07yNAURDiztxCSUN6RPzO0WES', NULL, '2023-05-20 03:23:19', '2023-05-20 03:23:19');
 
 --
 -- Indexes for dumped tables
@@ -249,7 +249,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -261,19 +261,19 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `todo_lists`
 --
 ALTER TABLE `todo_lists`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `todo_tasks`
 --
 ALTER TABLE `todo_tasks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

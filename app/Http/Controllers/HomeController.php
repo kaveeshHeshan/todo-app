@@ -27,10 +27,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $todoLists = TodoList::with('tasksData')->get();
+        $todoLists = TodoList::with('tasksData')->where('user_id', auth()->user()->id)->get();
 
         $onComingTasks = TodoTasks::select('id', 'td_list_id', 'title', DB::raw('DATE(due_date) as due_date'), 'due_time', 'status',)
             ->with('listData')
+            ->whereHas('listData', function($query) {
+                $query->where('user_id', auth()->user()->id);
+            })
             ->where('due_date', '>=', Carbon::now()->toDateString())
             ->where('due_date', '<=', Carbon::now()->addDays(3)->toDateString())
             ->where('status', '!=', 'complete')

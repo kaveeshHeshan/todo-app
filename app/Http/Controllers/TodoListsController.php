@@ -33,6 +33,7 @@ class TodoListsController extends Controller
     public function store(StoreTodoListRequest $request)
     {
         $newToDoList = TodoList::create([
+            'user_id' => auth()->user()->id,
             'title' => $request->title,
             'description' => $request->description,
         ]);

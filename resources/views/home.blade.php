@@ -135,7 +135,11 @@
                                     </div>
                                 @endforeach
                             @else
-                                {{ __('There are no tasks for you today') }}{{__('!')}}
+                                <div class="" style="">
+                                    <div class="row container">
+                                        {{ __('There are no tasks for you today') }}{{__('!')}}
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>

@@ -10,9 +10,16 @@ class TodoList extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'title',
         'description',
     ];
+
+    // Get USer data
+    public function userData()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
 
     // Get related tasks data
     public function tasksData()
