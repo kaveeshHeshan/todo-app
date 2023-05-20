@@ -15,7 +15,7 @@ class TodoListsController extends Controller
      */
     public function index()
     {
-        //
+        return response(['lists' => []]);
     }
 
     /**
