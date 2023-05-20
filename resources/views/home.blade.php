@@ -87,6 +87,10 @@
                                     <div class="color-indicator" style="background: #cbd5e1;"></div> Indicates the tasks that you have time to complete.
                                 </div>
                             </div>
+                            <br>
+                            <div class="">
+                                <a class="btn btn-primary" href="#todo-lists-section">{{ __('View Todo Lists') }} <i class='bx bx-chevrons-right'></i></a>
+                            </div>
                         </div>
                         
                     </div>
@@ -138,7 +142,7 @@
                 </div>
             </div>
             <br>
-            <div class="row">
+            <div id="todo-lists-section" class="row">
                 <div class="col-md-12 pb-3">
                     <a class="btn btn-success shadow" href="{{ route('todo_lists.create')}}"><i class='bx bx-plus-circle'></i>{{ __(' Add To-Do List') }}</a>
                 </div>
