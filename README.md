@@ -14,17 +14,16 @@
 3. Then add **Database configurations** to the **.env** file (what you created in second step).
 4. Then run **composer update**.
 5. Run **npm install**.
-6. Then again run **php artisan serve** in a terminal.
-7. After that run **npm run dev** in another terminal.
-8. I have added an **Backup SQL file** in **backup** folder. If you want, you can import it to the DB created by you..
-9. Then click the URL generated in **sixth (6)** step and you are good to go.
+6. Run **php artisan vendor:publish --provider="Proengsoft\JsValidation\JsValidationServiceProvider"** to publish.
+7. Then again run **php artisan serve** in a terminal.
+8. After that run **npm run dev** in another terminal.
+9. I have added an **Backup SQL file** in **backup** folder. If you want, you can import it to the DB created by you..
+10. Then click the URL generated in **sixth (6)** step and you are good to go.
 
 ## NOTE
 
-- Please check your versions comparing to the composer.json file in the project.
-- Versions I have used are following
-   1. PHP - 8.2.4
-   2. Laravel - ^10.10
-   3. Node Js - Latest
-
-
+-   Please check your versions comparing to the composer.json file in the project.
+-   Versions I have used are following
+    1. PHP - 8.2.4
+    2. Laravel - ^10.10
+    3. Node Js - Latest
